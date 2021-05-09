@@ -1,9 +1,14 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
-#include <GL/glew.h>
 #include <glm/glm.hpp>
 
 #include <iostream>
+
+#include <shader/ShaderLoader.h>
+
+using namespace sk;
+
+ShaderPtr shader;
 
 int main(int argc, char** argv)
 {
@@ -15,7 +20,7 @@ int main(int argc, char** argv)
         return -1;
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "OpenGL Tutorial C++", NULL, NULL);
+    window = glfwCreateWindow(800, 800, "OpenGL Tutorial C++", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -31,11 +36,39 @@ int main(int argc, char** argv)
     {
         /* Problem: glewInit failed, something is seriously wrong. */
         std::cerr << "GLEW init error : " << glewGetErrorString(err) << std::endl;
+        return -1;
     }
 
     std::cout <<"Status: Using GLEW Version : " << glewGetString(GLEW_VERSION) << std::endl;
 
-    glm::mat4 model(1.0);
+    // Load Shader
+    shader = ShaderLoader::LoadShaderForPath("../resources/shaders/triangle/vs.glsl", "../resources/shaders/triangle/fs.glsl");
+
+    std::cout << "shader program id : " << shader->GetProgramId() << std::endl;
+
+
+
+
+    float vertices[] = {
+            -0.5f, -0.5f, 0.0f,
+            0.5f, -0.5f, 0.0f,
+            0.0f,  0.5f, 0.0f
+    };
+
+    GLuint VAO;
+    GLuint VBO;
+
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
+
+    glGenBuffers(1, &VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, (void*)0);
+
+    glBindVertexArray(0);
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -43,6 +76,15 @@ int main(int argc, char** argv)
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
         glClearColor(0.2, 0.5, 0.5, 1.0);
+
+        auto rotate = (float)glm::radians(glfwGetTime()) * 10;
+        glm::mat4 model(1.0);
+        model = glm::rotate(model, rotate, glm::vec3(0, 0, 1));
+
+        glBindVertexArray(VAO);
+        shader->Use();
+        shader->SetUniformMatrix("model", model);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);

@@ -13,7 +13,16 @@ find_package(glfw3 REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(glm REQUIRED)
 
-add_executable(opengl_tutorial main.cpp)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
+set(SHADER_SRCS
+        shader/ShaderLoader.h
+        shader/ShaderLoader.cpp
+        shader/ShaderProgram.h
+        )
+
+add_executable(opengl_tutorial main.cpp gl_func_adapter.h
+        ${SHADER_SRCS})
 
 target_link_libraries(opengl_tutorial PRIVATE glfw)
 target_link_libraries(opengl_tutorial PRIVATE GLEW::GLEW)
