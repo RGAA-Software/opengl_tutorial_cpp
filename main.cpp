@@ -48,15 +48,31 @@ int main(int argc, char** argv)
 
 
 
+//    float vertices[] = {
+//            0.5f, 0.5f, 0.0f,
+//            0.5f, -0.5f, 0.0f,
+//            -0.5f, 0.5f, 0.0f,
+//
+//            0.5f, -0.5f, 0.0f,
+//            -0.5f, -0.5f, 0.0f,
+//            -0.5f, 0.5f, 0.0f,
+//    };
 
     float vertices[] = {
-            -0.5f, -0.5f, 0.0f,
+            0.5f, 0.5f, 0.0f,
             0.5f, -0.5f, 0.0f,
-            0.0f,  0.5f, 0.0f
+            -0.5f, -0.5f, 0.0f,
+            -0.5f, 0.5f, 0.0f
+    };
+
+    unsigned int indices[] = {
+            0, 1, 3,
+            1, 2, 3
     };
 
     GLuint VAO;
     GLuint VBO;
+    GLuint EBO;
 
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
@@ -68,8 +84,12 @@ int main(int argc, char** argv)
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, (void*)0);
 
-    glBindVertexArray(0);
+    glGenBuffers(1, &EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
+    glBindVertexArray(0);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
@@ -79,12 +99,14 @@ int main(int argc, char** argv)
 
         auto rotate = (float)glm::radians(glfwGetTime()) * 10;
         glm::mat4 model(1.0);
-        model = glm::rotate(model, rotate, glm::vec3(0, 0, 1));
+        //model = glm::rotate(model, rotate, glm::vec3(0, 0, 1));
 
         glBindVertexArray(VAO);
         shader->Use();
         shader->SetUniformMatrix("model", model);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        //glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
