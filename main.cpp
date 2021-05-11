@@ -90,6 +90,11 @@ int main(int argc, char** argv)
 
     glBindVertexArray(0);
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+    int nrAttributes;
+    glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
+    std::cout << "Maximum nr of vertex attributes supported: " << nrAttributes << std::endl;
+
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
