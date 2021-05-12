@@ -59,10 +59,10 @@ int main(int argc, char** argv)
 //    };
 
     float vertices[] = {
-            0.5f, 0.5f, 0.0f,
-            0.5f, -0.5f, 0.0f,
-            -0.5f, -0.5f, 0.0f,
-            -0.5f, 0.5f, 0.0f
+            0.5f, 0.5f, 0.0f,       1.0, 0.0, 0.0,
+            0.5f, -0.5f, 0.0f,      0.0, 1.0, 0.0,
+            -0.5f, -0.5f, 0.0f,     0.0, 0.0, 1.0,
+            -0.5f, 0.5f, 0.0f,      0.9, 0.6, 0.8,
     };
 
     unsigned int indices[] = {
@@ -81,15 +81,19 @@ int main(int argc, char** argv)
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
+    int stride = sizeof(float) * 6;
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, false, stride, (void*)0);
+
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, false, stride, (void*)(3*sizeof(float)));
 
     glGenBuffers(1, &EBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     glBindVertexArray(0);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     int nrAttributes;
     glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
@@ -110,6 +114,10 @@ int main(int argc, char** argv)
         shader->Use();
         shader->SetUniformMatrix("model", model);
         //glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        float red_value = (float)glm::sin(glfwGetTime());
+        glm::vec3 color(red_value, red_value/2, red_value/2);
+        shader->SetUniform3fv("color", color);
 
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
