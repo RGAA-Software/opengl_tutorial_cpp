@@ -108,7 +108,8 @@ int main(int argc, char** argv)
 
         auto rotate = (float)glm::radians(glfwGetTime()) * 10;
         glm::mat4 model(1.0);
-        //model = glm::rotate(model, rotate, glm::vec3(0, 0, 1));
+        model = glm::translate(model, glm::vec3(0.5, 0, 0));
+        model = glm::rotate(model, rotate, glm::vec3(0, 0, 1));
 
         glBindVertexArray(VAO);
         shader->Use();
