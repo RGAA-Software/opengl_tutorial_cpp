@@ -158,9 +158,23 @@ int main(int argc, char** argv)
         float translate_step = 200;
         for (int i = 0; i < 4; i++) {
             auto rotate = (float)glm::radians(glfwGetTime()) * 10;
-            glm::mat4 model(1.0);
+            glm::mat4 model(1.0f);
             model = glm::translate(model, glm::vec3(i*translate_step, i*translate_step, 0));
             //model = glm::rotate(model, rotate, glm::vec3(0, 0, 1));
+
+            if (i == 1) {
+                model = glm::mat4(1.0f);
+                model = glm::translate(model, glm::vec3(i*translate_step, i*translate_step, 0));
+                model = glm::rotate(model, rotate, glm::vec3(0,0,1));
+            }
+
+            if (i == 3) {
+                model = glm::mat4(1.0f);
+                model = glm::translate(model, glm::vec3(i*translate_step, i*translate_step, 0));
+                model = glm::translate(model, glm::vec3(image_width/2, image_height/2, 0));
+                model = glm::rotate(model, rotate, glm::vec3(0,0,1));
+                model = glm::translate(model, glm::vec3(-image_width/2, -image_height/2, 0));
+            }
 
             glBindVertexArray(VAO);
             shader->Use();
