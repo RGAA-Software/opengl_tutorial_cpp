@@ -75,17 +75,17 @@ int main(int argc, char** argv)
         sprite.SetRotate(0);
         sprite.SetScale(glm::vec3(1,1,1));
         sprite.SetTranslate(glm::vec3(0,0,0));
-        //sprite.Render(0);
+        sprite.Render(0);
 
         sprite.SetRotate(0);
         sprite.SetScale(glm::vec3(1,1,1));
         sprite.SetTranslate(glm::vec3(200, 200, 0));
-        //sprite.Render(0);
+        sprite.Render(0);
 
         sprite.SetTranslate(glm::vec3(400, 400, 0));
         //sprite.SetRotate(glfwGetTime()*16);
         sprite.SetScale(glm::vec3(sprite_scale, sprite_scale, 0));
-        //sprite.Render(0);
+        sprite.Render(0);
 
         circle_sprite.SetTranslate(glm::vec3(600, 600, 0));
         circle_sprite.Render(0);
