@@ -7,20 +7,29 @@
 
 #include "IRenderer.h"
 
+#include <vector>
+
 namespace sk {
 
+enum class SpriteShape {
+    kRect, kCircle
+};
 
 class Sprite : public IRenderer {
 public:
 
-    Sprite(const std::string& vs_path, const std::string& fs_path);
+    Sprite(const std::string& vs_path, const std::string& fs_path, SpriteShape shape = SpriteShape::kRect);
     ~Sprite();
 
     void Render(float delta) override;
 
 private:
 
-    GLuint          texture;
+    GLuint                  texture;
+
+    int                     circle_border = 50;
+    std::vector<float>      circle_vertices;
+    SpriteShape             shape = SpriteShape::kRect;
 };
 
 }

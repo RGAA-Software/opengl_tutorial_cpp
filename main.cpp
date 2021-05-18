@@ -26,6 +26,7 @@ int main(int argc, char** argv)
     /* Create a windowed mode window and its OpenGL context */
     float window_width = 800;
     float window_height = 800;
+    glfwWindowHint(GLFW_SAMPLES, 4);
     window = glfwCreateWindow(window_width, window_height, "OpenGL Tutorial C++", NULL, NULL);
     if (!window)
     {
@@ -52,6 +53,7 @@ int main(int argc, char** argv)
 
     Director::Instance()->Init(window_width, window_height);
     Sprite sprite("../resources/shaders/triangle/vs.glsl", "../resources/shaders/triangle/fs.glsl");
+    Sprite circle_sprite("../resources/shaders/triangle/vs.glsl", "../resources/shaders/triangle/fs.glsl", SpriteShape::kCircle);
 
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -73,17 +75,20 @@ int main(int argc, char** argv)
         sprite.SetRotate(0);
         sprite.SetScale(glm::vec3(1,1,1));
         sprite.SetTranslate(glm::vec3(0,0,0));
-        sprite.Render(0);
+        //sprite.Render(0);
 
         sprite.SetRotate(0);
         sprite.SetScale(glm::vec3(1,1,1));
         sprite.SetTranslate(glm::vec3(200, 200, 0));
-        sprite.Render(0);
+        //sprite.Render(0);
 
         sprite.SetTranslate(glm::vec3(400, 400, 0));
         //sprite.SetRotate(glfwGetTime()*16);
         sprite.SetScale(glm::vec3(sprite_scale, sprite_scale, 0));
-        sprite.Render(0);
+        //sprite.Render(0);
+
+        circle_sprite.SetTranslate(glm::vec3(600, 600, 0));
+        circle_sprite.Render(0);
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
