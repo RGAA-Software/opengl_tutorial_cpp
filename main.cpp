@@ -62,14 +62,27 @@ int main(int argc, char** argv)
 //    glEnable(GL_BLEND);
 //    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    /* Loop until the user closes the window */
+    float sprite_scale = 1.0f;
+
     while (!glfwWindowShouldClose(window))
     {
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
         glClearColor(0.2, 0.5, 0.5, 1.0);
 
+        sprite.SetRotate(0);
+        sprite.SetScale(glm::vec3(1,1,1));
+        sprite.SetTranslate(glm::vec3(0,0,0));
+        sprite.Render(0);
 
+        sprite.SetRotate(0);
+        sprite.SetScale(glm::vec3(1,1,1));
+        sprite.SetTranslate(glm::vec3(200, 200, 0));
+        sprite.Render(0);
+
+        sprite.SetTranslate(glm::vec3(400, 400, 0));
+        //sprite.SetRotate(glfwGetTime()*16);
+        sprite.SetScale(glm::vec3(sprite_scale, sprite_scale, 0));
         sprite.Render(0);
 
         /* Swap front and back buffers */
@@ -77,6 +90,13 @@ int main(int argc, char** argv)
 
         /* Poll for and process events */
         glfwPollEvents();
+
+
+        // other logic
+        sprite_scale += 0.0001;
+        if (sprite_scale >= 2.5) {
+            sprite_scale = 1.0f;
+        }
     }
 
     glfwTerminate();

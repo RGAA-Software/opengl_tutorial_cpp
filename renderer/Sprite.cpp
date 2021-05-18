@@ -19,6 +19,10 @@ Sprite::Sprite(const std::string& vs_path, const std::string& fs_path)
 
     float image_width = 200;
     float image_height = 200;
+
+    size.x = image_width;
+    size.y = image_height;
+
     float vertices[] = {
             0,  0,  0,                      1.0, 0.0, 0.0,    0.0f, 0.0f,
             image_width, 0,  0,             0.0, 1.0, 0.0,    1.0f, 0.0f,
@@ -83,12 +87,6 @@ Sprite::~Sprite() {
 
 void Sprite::Render(float delta) {
     IRenderer::Render(delta);
-
-    // render my self
-
-    glm::mat4 model(1.0f);
-    shader->SetUniformMatrix("projection", Director::Instance()->GetOrthoProjection());
-    shader->SetUniformMatrix("model", model);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
