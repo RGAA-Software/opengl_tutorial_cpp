@@ -5,10 +5,8 @@
 #include <iostream>
 
 #include <shader/ShaderLoader.h>
-
-#define STB_IMAGE_IMPLEMENTATION
-#define STB_IMAGE_STATIC
-#include "stb/stb_image.h"
+#include "renderer/Sprite.h"
+#include "renderer/Director.h"
 
 using namespace sk;
 
@@ -52,93 +50,9 @@ int main(int argc, char** argv)
     // Load Shader
     shader = ShaderLoader::LoadShaderForPath("../resources/shaders/triangle/vs.glsl", "../resources/shaders/triangle/fs.glsl");
 
-    std::cout << "shader program id : " << shader->GetProgramId() << std::endl;
+    Director::Instance()->Init(window_width, window_height);
+    Sprite sprite("../resources/shaders/triangle/vs.glsl", "../resources/shaders/triangle/fs.glsl");
 
-
-    // init projection
-    projection = glm::ortho(0.0f, window_width, 0.0f, window_height, 0.0f, 1.0f);
-
-    float image_width = 200;
-    float image_height = 200;
-    float vertices[] = {
-            0,  0,  0,                      1.0, 0.0, 0.0,    0.0f, 0.0f,
-            image_width, 0,  0,             0.0, 1.0, 0.0,    1.0f, 0.0f,
-            image_width, image_height, 0,   0.0, 0.0, 1.0,    1.0f, 1.0f,
-            0,  image_height, 0,            0.9, 0.6, 0.8,    0.0f, 1.0f
-    };
-
-    unsigned int indices[] = {
-            0, 1, 2,
-            2, 3, 0
-    };
-
-    GLuint VAO;
-    GLuint VBO;
-    GLuint EBO;
-
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
-
-    glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    int stride = sizeof(float) * 8;
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, false, stride, (void*)0);
-
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, false, stride, (void*)(3*sizeof(float)));
-
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, false, stride, (void*)(6*sizeof(float)));
-
-    glGenBuffers(1, &EBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-    // First Image
-    // Gen Texture
-    GLuint texture;
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    // Load Image
-    int width, height, channels;
-    stbi_set_flip_vertically_on_load(true);
-    unsigned char* data = stbi_load("../resources/images/person.jpg", &width, &height, &channels, 0 );
-    if (data) {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-
-    }
-    stbi_image_free(data);
-    glBindTexture(GL_TEXTURE_2D, 0);
-
-    // Second Image
-    // Gen Texture
-    GLuint texture_logo;
-    glGenTextures(1, &texture_logo);
-    glBindTexture(GL_TEXTURE_2D, texture_logo);
-    glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    // Load Image
-    int logo_width, logo_height, logo_channels;
-    stbi_set_flip_vertically_on_load(true);
-    unsigned char* logo_data = stbi_load("../resources/images/logo_big.png", &logo_width, &logo_height, &logo_channels, 0 );
-    if (logo_data) {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, logo_data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-
-    }
-    glBindVertexArray(0);
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     int nrAttributes;
@@ -155,50 +69,8 @@ int main(int argc, char** argv)
         glClear(GL_COLOR_BUFFER_BIT);
         glClearColor(0.2, 0.5, 0.5, 1.0);
 
-        float translate_step = 200;
-        for (int i = 0; i < 4; i++) {
-            auto rotate = (float)glm::radians(glfwGetTime()) * 10;
-            glm::mat4 model(1.0f);
-            model = glm::translate(model, glm::vec3(i*translate_step, i*translate_step, 0));
-            //model = glm::rotate(model, rotate, glm::vec3(0, 0, 1));
 
-            if (i == 1) {
-                model = glm::mat4(1.0f);
-                model = glm::translate(model, glm::vec3(i*translate_step, i*translate_step, 0));
-                model = glm::rotate(model, rotate, glm::vec3(0,0,1));
-            }
-
-            if (i == 3) {
-                model = glm::mat4(1.0f);
-                model = glm::translate(model, glm::vec3(i*translate_step, i*translate_step, 0));
-                model = glm::translate(model, glm::vec3(image_width/2, image_height/2, 0));
-                model = glm::rotate(model, rotate, glm::vec3(0,0,1));
-                model = glm::translate(model, glm::vec3(-image_width/2, -image_height/2, 0));
-            }
-
-            glBindVertexArray(VAO);
-            shader->Use();
-            shader->SetUniformMatrix("projection", projection);
-            shader->SetUniformMatrix("model", model);
-            //glDrawArrays(GL_TRIANGLES, 0, 6);
-
-            float red_value = (float)glm::sin(glfwGetTime());
-            glm::vec3 color(red_value, red_value/2, red_value/2);
-            shader->SetUniform3fv("color", color);
-
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, texture);
-            shader->SetUniform1i("image", 0);
-
-            glActiveTexture(GL_TEXTURE1);
-            glBindTexture(GL_TEXTURE_2D, texture_logo);
-            shader->SetUniform1i("image2", 1);
-
-            float mix_factor = (i+1) * 0.2;
-            shader->SetUniform1f("mix_factor", mix_factor);
-
-            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        }
+        sprite.Render(0);
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);

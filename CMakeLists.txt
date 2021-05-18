@@ -21,8 +21,13 @@ set(SHADER_SRCS
         shader/ShaderProgram.h
         )
 
+set(RENDERER_SRCS
+        renderer/IRenderer.cpp
+        renderer/IRenderer.h renderer/Sprite.cpp renderer/Sprite.h renderer/Director.cpp renderer/Director.h)
+
 add_executable(opengl_tutorial main.cpp gl_func_adapter.h
-        ${SHADER_SRCS})
+        ${SHADER_SRCS}
+        ${RENDERER_SRCS})
 
 target_link_libraries(opengl_tutorial PRIVATE glfw)
 target_link_libraries(opengl_tutorial PRIVATE GLEW::GLEW)
