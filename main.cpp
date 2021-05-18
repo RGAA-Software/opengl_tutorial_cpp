@@ -27,6 +27,8 @@ int main(int argc, char** argv)
     float window_width = 800;
     float window_height = 800;
     glfwWindowHint(GLFW_SAMPLES, 4);
+    glfwWindowHint(GLFW_REFRESH_RATE, 60);
+    glfwSwapInterval(0);
     window = glfwCreateWindow(window_width, window_height, "OpenGL Tutorial C++", NULL, NULL);
     if (!window)
     {
@@ -66,6 +68,9 @@ int main(int argc, char** argv)
 
     float sprite_scale = 1.0f;
 
+    double lasttime = 0;
+    double target_fps = 60;
+
     while (!glfwWindowShouldClose(window))
     {
         /* Render here */
@@ -87,6 +92,7 @@ int main(int argc, char** argv)
         sprite.SetScale(glm::vec3(sprite_scale, sprite_scale, 0));
         sprite.Render(0);
 
+        circle_sprite.SetRotate(glfwGetTime()*16);
         circle_sprite.SetTranslate(glm::vec3(600, 600, 0));
         circle_sprite.Render(0);
 
@@ -98,10 +104,14 @@ int main(int argc, char** argv)
 
 
         // other logic
-        sprite_scale += 0.0001;
+        sprite_scale += 0.01;
         if (sprite_scale >= 2.5) {
             sprite_scale = 1.0f;
         }
+        while (glfwGetTime() < lasttime + 1.0/target_fps) {
+            // TODO: Put the thread to sleep, yield, or simply do nothing
+        }
+        lasttime += 1.0/target_fps;
     }
 
     glfwTerminate();
