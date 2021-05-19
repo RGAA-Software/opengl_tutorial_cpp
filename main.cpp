@@ -7,6 +7,7 @@
 #include <shader/ShaderLoader.h>
 #include "renderer/Sprite.h"
 #include "renderer/Director.h"
+#include "renderer/MultiBars.h"
 
 using namespace sk;
 
@@ -57,6 +58,8 @@ int main(int argc, char** argv)
     Sprite sprite("../resources/shaders/triangle/vs.glsl", "../resources/shaders/triangle/fs.glsl");
     Sprite circle_sprite("../resources/shaders/triangle/vs.glsl", "../resources/shaders/triangle/fs.glsl", SpriteShape::kCircle);
 
+    MultiBars multi_bars("../resources/shaders/triangle/vs.glsl", "../resources/shaders/triangle/fs_color.glsl");
+
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     int nrAttributes;
@@ -95,6 +98,8 @@ int main(int argc, char** argv)
         circle_sprite.SetRotate(glfwGetTime()*16);
         circle_sprite.SetTranslate(glm::vec3(600, 600, 0));
         circle_sprite.Render(0);
+
+        multi_bars.Render(0);
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
