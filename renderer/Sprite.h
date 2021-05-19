@@ -18,7 +18,7 @@ enum class SpriteShape {
 class Sprite : public IRenderer {
 public:
 
-    Sprite(const std::string& vs_path, const std::string& fs_path, SpriteShape shape = SpriteShape::kRect);
+    Sprite(const std::string& vs_path, const std::string& fs_path, SpriteShape shape = SpriteShape::kRect, Projection proj = Projection::kPerspective);
     ~Sprite();
 
     void Render(float delta) override;

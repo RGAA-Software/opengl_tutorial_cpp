@@ -40,15 +40,30 @@ void IRenderer::Render(float delta) {
 
     glm::mat4 model(1.0);
 
-    // do translation
-    model = glm::translate(model, translate);
-    //model = glm::translate(model, glm::vec3(size.x/2 * scale.x, size.y/2 * scale.y, 0));
-    model = glm::rotate(model, rotate_radian, rotate_axis);
-    model = glm::translate(model, glm::vec3(-size.x/2 * scale.x, -size.y/2 * scale.y, 0));
-    model = glm::scale(model, scale);
+    if (projection == Projection::kOrtho) {
+        // do translation
+        model = glm::translate(model, translate);
+        //model = glm::translate(model, glm::vec3(size.x/2 * scale.x, size.y/2 * scale.y, 0));
+        model = glm::rotate(model, rotate_radian, rotate_axis);
+        model = glm::translate(model, glm::vec3(-size.x / 2 * scale.x, -size.y / 2 * scale.y, 0));
+        model = glm::scale(model, scale);
 
-    shader->SetUniformMatrix("model", model);
-    shader->SetUniformMatrix("projection", Director::Instance()->GetOrthoProjection());
+        glm::mat4 view(1.0f);
+
+        shader->SetUniformMatrix("model", model);
+        shader->SetUniformMatrix("view", view);
+        shader->SetUniformMatrix("projection", Director::Instance()->GetOrthoProjection());
+
+    } else if (projection == Projection::kPerspective) {
+        // do translation
+        model = glm::translate(model, translate);
+        model = glm::rotate(model, rotate_radian, rotate_axis);
+        model = glm::scale(model, scale);
+
+        shader->SetUniformMatrix("model", model);
+        shader->SetUniformMatrix("view", Director::Instance()->GetCameraLookAt());
+        shader->SetUniformMatrix("projection", Director::Instance()->GetPerspectiveProjection());
+    }
 }
 
 }

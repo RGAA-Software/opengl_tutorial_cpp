@@ -21,9 +21,14 @@ public:
     void Init(float width, float height);
 
     glm::mat4 GetOrthoProjection();
+    glm::mat4 GetPerspectiveProjection();
+    glm::mat4 GetCameraLookAt();
 
 private:
     glm::mat4           ortho_projection;
+
+    glm::mat4           perspective_projection;
+    glm::mat4           camera_look_at;
 
 };
 

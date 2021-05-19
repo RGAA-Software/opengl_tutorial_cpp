@@ -56,7 +56,7 @@ int main(int argc, char** argv)
 
     Director::Instance()->Init(window_width, window_height);
     Sprite sprite("../resources/shaders/triangle/vs.glsl", "../resources/shaders/triangle/fs.glsl");
-    Sprite circle_sprite("../resources/shaders/triangle/vs.glsl", "../resources/shaders/triangle/fs.glsl", SpriteShape::kCircle);
+    Sprite circle_sprite("../resources/shaders/triangle/vs.glsl", "../resources/shaders/triangle/fs.glsl", SpriteShape::kCircle, Projection::kOrtho);
 
     MultiBars multi_bars("../resources/shaders/triangle/vs.glsl", "../resources/shaders/triangle/fs_color.glsl");
 
@@ -80,26 +80,26 @@ int main(int argc, char** argv)
         glClear(GL_COLOR_BUFFER_BIT);
         glClearColor(0.2, 0.5, 0.5, 1.0);
 
-        sprite.SetRotate(0);
+        sprite.SetRotate(glfwGetTime()*16, glm::vec3(0,1,0));
         sprite.SetScale(glm::vec3(1,1,1));
         sprite.SetTranslate(glm::vec3(0,0,0));
         sprite.Render(0);
 
-        sprite.SetRotate(0);
-        sprite.SetScale(glm::vec3(1,1,1));
-        sprite.SetTranslate(glm::vec3(200, 200, 0));
-        sprite.Render(0);
-
-        sprite.SetTranslate(glm::vec3(400, 400, 0));
-        //sprite.SetRotate(glfwGetTime()*16);
-        sprite.SetScale(glm::vec3(sprite_scale, sprite_scale, 0));
-        sprite.Render(0);
-
+//        sprite.SetRotate(0);
+//        sprite.SetScale(glm::vec3(1,1,1));
+//        sprite.SetTranslate(glm::vec3(200, 200, 0));
+//        sprite.Render(0);
+//
+//        sprite.SetTranslate(glm::vec3(400, 400, 0));
+//        //sprite.SetRotate(glfwGetTime()*16);
+//        sprite.SetScale(glm::vec3(sprite_scale, sprite_scale, 0));
+//        sprite.Render(0);
+//
         circle_sprite.SetRotate(glfwGetTime()*16);
         circle_sprite.SetTranslate(glm::vec3(600, 600, 0));
         circle_sprite.Render(0);
-
-        multi_bars.Render(0);
+//
+//        multi_bars.Render(0);
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);

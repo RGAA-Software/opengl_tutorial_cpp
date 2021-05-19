@@ -14,11 +14,11 @@
 
 namespace sk {
 
-Sprite::Sprite(const std::string& vs_path, const std::string& fs_path, SpriteShape shape)
+Sprite::Sprite(const std::string& vs_path, const std::string& fs_path, SpriteShape shape, Projection proj)
     : IRenderer(vs_path, "", fs_path) {
 
     this->shape = shape;
-
+    projection = proj;
     // init my self
 
     float image_width = 200;
@@ -27,11 +27,30 @@ Sprite::Sprite(const std::string& vs_path, const std::string& fs_path, SpriteSha
     size.x = image_width;
     size.y = image_height;
 
-    float vertices[] = {
-            0,  0,  0,                      1.0, 0.0, 0.0,    0.0f, 0.0f,
-            image_width, 0,  0,             0.0, 1.0, 0.0,    1.0f, 0.0f,
-            image_width, image_height, 0,   0.0, 0.0, 1.0,    1.0f, 1.0f,
-            0,  image_height, 0,            0.9, 0.6, 0.8,    0.0f, 1.0f
+    int vertices_size = 8*4;
+    float* vertices = new float[vertices_size];
+
+    if (proj == Projection::kPerspective) {
+        float verts[] = {
+                -0.5,  -0.5,  0,                        1.0, 0.0, 0.0,    0.0f, 0.0f,
+                0.5, -0.5,  0,                          0.0, 1.0, 0.0,    1.0f, 0.0f,
+                0.5, 0.5, 0,                            0.0, 0.0, 1.0,    1.0f, 1.0f,
+                -0.5,  0.5, 0,                          0.9, 0.6, 0.8,    0.0f, 1.0f
+        };
+        memcpy(vertices, verts, sizeof(float)*vertices_size);
+    } else if (proj == Projection::kOrtho) {
+        float verts[] = {
+                0,  0,  0,                      1.0, 0.0, 0.0,    0.0f, 0.0f,
+                image_width, 0,  0,             0.0, 1.0, 0.0,    1.0f, 0.0f,
+                image_width, image_height, 0,   0.0, 0.0, 1.0,    1.0f, 1.0f,
+                0,  image_height, 0,            0.9, 0.6, 0.8,    0.0f, 1.0f
+        };
+        memcpy(vertices, verts, sizeof(float)*vertices_size);
+    }
+
+    unsigned int indices[] = {
+            0, 1, 2,
+            2, 3, 0
     };
 
 
@@ -59,10 +78,6 @@ Sprite::Sprite(const std::string& vs_path, const std::string& fs_path, SpriteSha
         insert_point_func(radius*(1+unit_x), radius*(1+unit_y), 0,   0, 0, 0,  (1+unit_x)/2, (1+unit_y)/2);
     }
 
-    unsigned int indices[] = {
-            0, 1, 2,
-            2, 3, 0
-    };
 
     GLuint VBO;
     GLuint EBO;
@@ -70,7 +85,7 @@ Sprite::Sprite(const std::string& vs_path, const std::string& fs_path, SpriteSha
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     if (shape == SpriteShape::kRect) {
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(float)*vertices_size, vertices, GL_STATIC_DRAW);
     } else if (shape == SpriteShape::kCircle) {
         glBufferData(GL_ARRAY_BUFFER, sizeof(float)*circle_vertices.size(), circle_vertices.data(), GL_STATIC_DRAW);
     }

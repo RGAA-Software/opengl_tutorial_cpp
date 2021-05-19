@@ -12,6 +12,10 @@
 
 namespace sk {
 
+enum class Projection {
+    kOrtho, kPerspective
+};
+
 class IRenderer {
 
 public:
@@ -41,6 +45,8 @@ protected:
     glm::vec3       rotate_axis = glm::vec3(0,0,1);
 
     glm::vec3       scale = glm::vec3(1,1,1);
+
+    Projection      projection = Projection::kPerspective;
 };
 
 }
