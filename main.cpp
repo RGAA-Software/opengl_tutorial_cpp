@@ -8,6 +8,7 @@
 #include "renderer/Sprite.h"
 #include "renderer/Director.h"
 #include "renderer/MultiBars.h"
+#include "renderer/Cube.h"
 
 using namespace sk;
 
@@ -60,6 +61,8 @@ int main(int argc, char** argv)
 
     MultiBars multi_bars("../resources/shaders/triangle/vs.glsl", "../resources/shaders/triangle/fs_color.glsl");
 
+    Cube cube("../resources/shaders/triangle/vs.glsl", "../resources/shaders/triangle/fs_single_image.glsl","../resources/images/person.jpg");
+
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     int nrAttributes;
@@ -77,12 +80,12 @@ int main(int argc, char** argv)
     while (!glfwWindowShouldClose(window))
     {
         /* Render here */
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
         glClearColor(0.2, 0.5, 0.5, 1.0);
 
         sprite.SetRotate(glfwGetTime()*16, glm::vec3(0,1,0));
         sprite.SetScale(glm::vec3(1,1,1));
-        sprite.SetTranslate(glm::vec3(0,0,0));
+        sprite.SetTranslate(glm::vec3(-1.3,0,0));
         sprite.Render(0);
 
 //        sprite.SetRotate(0);
@@ -98,7 +101,11 @@ int main(int argc, char** argv)
         circle_sprite.SetRotate(glfwGetTime()*16);
         circle_sprite.SetTranslate(glm::vec3(600, 600, 0));
         circle_sprite.Render(0);
-//
+
+        glEnable(GL_DEPTH_TEST);
+        cube.SetRotate(glfwGetTime()*16, glm::vec3(1,1,0));
+        cube.Render(0);
+        glDisable(GL_DEPTH_TEST);
 //        multi_bars.Render(0);
 
         /* Swap front and back buffers */
