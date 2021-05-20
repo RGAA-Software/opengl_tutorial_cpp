@@ -19,7 +19,16 @@ public:
     }
 
     void ProcessEvent(GLFWwindow* window, float delta);
+    void ProcessCursor(double x, double y);
 
+private:
+
+    float last_x = 0;
+    float last_y = 0;
+    bool  first_enter = true;
+
+    float pitch = 0;
+    float yaw = 270;
 };
 
 }

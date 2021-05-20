@@ -38,6 +38,10 @@ int main(int argc, char** argv)
 
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetCursorPosCallback(window, [](GLFWwindow* window, double x, double y) {
+        InputProcessor::Instance()->ProcessCursor(x, y);
+    });
 
     // GLEW
     GLenum err = glewInit();
@@ -85,7 +89,7 @@ int main(int argc, char** argv)
 
     double last_render_time = 0;
 
-    while (!glfwWindowShouldClose(window))
+    while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
     {
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);

@@ -47,4 +47,40 @@ void InputProcessor::ProcessEvent(GLFWwindow *window, float delta) {
     }
 }
 
+void InputProcessor::ProcessCursor(double x, double y) {
+    std::cout << "x : " << x << " y : " << y << std::endl;
+    if (first_enter) {
+        first_enter = false;
+        last_x = x;
+        last_y = y;
+        return;
+    }
+
+    float delta_x = x - last_x;
+    float delta_y = - (y - last_y);
+
+    last_x = x;
+    last_y = y;
+
+    float sense = 0.02;
+    delta_x *= sense;
+    delta_y *= sense;
+
+    pitch += delta_y;
+    yaw += delta_x;
+
+    if (pitch > 89) {
+        pitch = 89;
+    } else if (pitch < -89) {
+        pitch = -89;
+    }
+
+    glm::vec3 front;
+    front.x = glm::cos(glm::radians(pitch)) * glm::cos(glm::radians(yaw));
+    front.y = glm::sin(glm::radians(pitch));
+    front.z = glm::cos(glm::radians(pitch)) * glm::sin(glm::radians(yaw));
+
+    Director::Instance()->UpdateCameraFront(glm::normalize(front));
+}
+
 }
