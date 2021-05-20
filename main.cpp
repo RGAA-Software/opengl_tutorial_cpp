@@ -72,6 +72,14 @@ int main(int argc, char** argv)
 //    glEnable(GL_BLEND);
 //    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+    glm::vec3 cube_positions[] = {
+            glm::vec3(0, 0, -5),
+            glm::vec3(1.0f, 0.6f, 0),
+            glm::vec3(-2.0f, 1.0f, -3.0f),
+            glm::vec3(3.0f, -0.8f, 1.0f),
+            glm::vec3(-3.0f, -1.8f, -4.0f),
+    };
+
     float sprite_scale = 1.0f;
 
     double lasttime = 0;
@@ -83,10 +91,10 @@ int main(int argc, char** argv)
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
         glClearColor(0.2, 0.5, 0.5, 1.0);
 
-        sprite.SetRotate(glfwGetTime()*16, glm::vec3(0,1,0));
-        sprite.SetScale(glm::vec3(1,1,1));
-        sprite.SetTranslate(glm::vec3(-1.3,0,0));
-        sprite.Render(0);
+//        sprite.SetRotate(glfwGetTime()*16, glm::vec3(0,1,0));
+//        sprite.SetScale(glm::vec3(1,1,1));
+//        sprite.SetTranslate(glm::vec3(-1.3,0,0));
+//        sprite.Render(0);
 
 //        sprite.SetRotate(0);
 //        sprite.SetScale(glm::vec3(1,1,1));
@@ -98,13 +106,19 @@ int main(int argc, char** argv)
 //        sprite.SetScale(glm::vec3(sprite_scale, sprite_scale, 0));
 //        sprite.Render(0);
 //
-        circle_sprite.SetRotate(glfwGetTime()*16);
-        circle_sprite.SetTranslate(glm::vec3(600, 600, 0));
-        circle_sprite.Render(0);
+//        circle_sprite.SetRotate(glfwGetTime()*16);
+//        circle_sprite.SetTranslate(glm::vec3(600, 600, 0));
+//        circle_sprite.Render(0);
 
         glEnable(GL_DEPTH_TEST);
-        cube.SetRotate(glfwGetTime()*16, glm::vec3(1,1,0));
-        cube.Render(0);
+        int index = 1;
+        for (auto& pos : cube_positions) {
+            index += 3;
+            cube.SetTranslate(pos);
+            cube.SetRotate(glfwGetTime()*index * (index%2 == 0 ? 1 : -1), glm::vec3(1,1,0));
+            cube.Render(0);
+        }
+
         glDisable(GL_DEPTH_TEST);
 //        multi_bars.Render(0);
 

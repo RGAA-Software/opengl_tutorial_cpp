@@ -33,6 +33,7 @@ Cube::Cube(const std::string& vs_path, const std::string& fs_path, const std::st
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
         int width, height, channels;
+        stbi_set_flip_vertically_on_load(true);
         unsigned char* data = stbi_load(tex_path.c_str(), &width, &height, &channels, 0);
         if (data) {
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
