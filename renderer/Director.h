@@ -24,11 +24,22 @@ public:
     glm::mat4 GetPerspectiveProjection();
     glm::mat4 GetCameraLookAt();
 
+    glm::vec3 GetCameraPosition();
+    void UpdateCameraPosition(const glm::vec3& pos);
+
+    glm::vec3 GetCameraFront();
+    void UpdateCameraFront(const glm::vec3& front);
+
+    glm::vec3 GetCameraUp();
+
 private:
     glm::mat4           ortho_projection;
 
     glm::mat4           perspective_projection;
     glm::mat4           camera_look_at;
+    glm::vec3           camera_pos;
+    glm::vec3           camera_front;
+    glm::vec3           camera_up;
 
 };
 

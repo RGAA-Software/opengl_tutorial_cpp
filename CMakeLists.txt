@@ -23,7 +23,7 @@ set(SHADER_SRCS
 
 set(RENDERER_SRCS
         renderer/IRenderer.cpp
-        renderer/IRenderer.h renderer/Sprite.cpp renderer/Sprite.h renderer/Director.cpp renderer/Director.h renderer/MultiBars.cpp renderer/MultiBars.h renderer/Cube.cpp renderer/Cube.h)
+        renderer/IRenderer.h renderer/Sprite.cpp renderer/Sprite.h renderer/Director.cpp renderer/Director.h renderer/MultiBars.cpp renderer/MultiBars.h renderer/Cube.cpp renderer/Cube.h InputProcessor.cpp InputProcessor.h)
 
 add_executable(opengl_tutorial main.cpp gl_func_adapter.h
         ${SHADER_SRCS}

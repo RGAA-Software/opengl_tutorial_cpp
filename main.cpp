@@ -10,11 +10,9 @@
 #include "renderer/MultiBars.h"
 #include "renderer/Cube.h"
 
+#include "InputProcessor.h"
+
 using namespace sk;
-
-ShaderPtr shader;
-
-glm::mat4 projection;
 
 int main(int argc, char** argv)
 {
@@ -26,8 +24,8 @@ int main(int argc, char** argv)
         return -1;
 
     /* Create a windowed mode window and its OpenGL context */
-    float window_width = 800;
-    float window_height = 800;
+    float window_width = 1920;
+    float window_height = 1080;
     glfwWindowHint(GLFW_SAMPLES, 4);
     glfwWindowHint(GLFW_REFRESH_RATE, 60);
     glfwSwapInterval(0);
@@ -53,7 +51,7 @@ int main(int argc, char** argv)
     std::cout <<"Status: Using GLEW Version : " << glewGetString(GLEW_VERSION) << std::endl;
 
     // Load Shader
-    shader = ShaderLoader::LoadShaderForPath("../resources/shaders/triangle/vs.glsl", "../resources/shaders/triangle/fs.glsl");
+    auto shader = ShaderLoader::LoadShaderForPath("../resources/shaders/triangle/vs.glsl", "../resources/shaders/triangle/fs.glsl");
 
     Director::Instance()->Init(window_width, window_height);
     Sprite sprite("../resources/shaders/triangle/vs.glsl", "../resources/shaders/triangle/fs.glsl");
@@ -85,11 +83,20 @@ int main(int argc, char** argv)
     double lasttime = 0;
     double target_fps = 60;
 
+    double last_render_time = 0;
+
     while (!glfwWindowShouldClose(window))
     {
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
         glClearColor(0.2, 0.5, 0.5, 1.0);
+
+        auto current_time = glfwGetTime();
+        if (last_render_time == 0) {
+            last_render_time = current_time;
+        }
+        float delta = current_time - last_render_time;
+        last_render_time = current_time;
 
 //        sprite.SetRotate(glfwGetTime()*16, glm::vec3(0,1,0));
 //        sprite.SetScale(glm::vec3(1,1,1));
@@ -110,13 +117,15 @@ int main(int argc, char** argv)
 //        circle_sprite.SetTranslate(glm::vec3(600, 600, 0));
 //        circle_sprite.Render(0);
 
+        InputProcessor::Instance()->ProcessEvent(window, delta);
+
         glEnable(GL_DEPTH_TEST);
         int index = 1;
         for (auto& pos : cube_positions) {
             index += 3;
             cube.SetTranslate(pos);
             cube.SetRotate(glfwGetTime()*index * (index%2 == 0 ? 1 : -1), glm::vec3(1,1,0));
-            cube.Render(0);
+            cube.Render(delta);
         }
 
         glDisable(GL_DEPTH_TEST);
@@ -134,6 +143,7 @@ int main(int argc, char** argv)
         if (sprite_scale >= 2.5) {
             sprite_scale = 1.0f;
         }
+
         while (glfwGetTime() < lasttime + 1.0/target_fps) {
             // TODO: Put the thread to sleep, yield, or simply do nothing
         }
