@@ -33,5 +33,10 @@ void main()
     float specularFactor = pow(max(dot(reflectDir, toCameraDir), 0), 8);
     vec3 specularColor = lightColor * color.rgb * specularFactor * 0.2;
 
-    gl_FragColor = vec4(ambientColor + diffuseColor + specularColor, 1.0);
+    float distance = length(lightPosition - outPos);
+    float attenuation = 1.0/(1+0.09*distance +0.032*distance*distance);
+
+    vec3 lightEffectedColor = attenuation * (diffuseColor + specularColor);
+
+    gl_FragColor = vec4(ambientColor + lightEffectedColor, 1.0);
 }

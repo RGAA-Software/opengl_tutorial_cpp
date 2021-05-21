@@ -58,11 +58,11 @@ int main(int argc, char** argv)
     //auto shader = ShaderLoader::LoadShaderForPath("../resources/shaders/triangle/vs.glsl", "../resources/shaders/triangle/fs.glsl");
 
     Director::Instance()->Init(window_width, window_height);
-    Sprite sprite("../resources/shaders/triangle/vs.glsl", "../resources/shaders/triangle/fs_image_light.glsl", "../resources/images/ground_stone.jpg");
+    Sprite sprite("../resources/shaders/triangle/vs.glsl", "../resources/shaders/triangle/fs_image_point_light.glsl", "../resources/images/ground_stone.jpg");
     //Sprite circle_sprite("../resources/shaders/triangle/vs.glsl", "../resources/shaders/triangle/fs.glsl", SpriteShape::kCircle, Projection::kOrtho);
     //MultiBars multi_bars("../resources/shaders/triangle/vs.glsl", "../resources/shaders/triangle/fs_color.glsl");
 
-    Cube cube("../resources/shaders/triangle/vs.glsl", "../resources/shaders/triangle/fs_image_light.glsl","../resources/images/person.jpg");
+    Cube cube("../resources/shaders/triangle/vs.glsl", "../resources/shaders/triangle/fs_image_point_light.glsl","../resources/images/person.jpg");
     Cube light_cube("../resources/shaders/triangle/vs.glsl", "../resources/shaders/triangle/fs_uniform_color.glsl");
 
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -94,7 +94,7 @@ int main(int argc, char** argv)
     {
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-        glClearColor(0.2, 0.2, 0.2, 1.0);
+        glClearColor(0.1, 0.1, 0.1, 1.0);
 
         auto current_time = glfwGetTime();
         if (last_render_time == 0) {
