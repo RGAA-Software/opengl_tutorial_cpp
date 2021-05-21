@@ -21,11 +21,17 @@ set(SHADER_SRCS
         shader/ShaderProgram.h
         )
 
-set(RENDERER_SRCS
-        renderer/IRenderer.cpp
-        renderer/IRenderer.h renderer/Sprite.cpp renderer/Sprite.h renderer/Director.cpp renderer/Director.h renderer/MultiBars.cpp renderer/MultiBars.h renderer/Cube.cpp renderer/Cube.h InputProcessor.cpp InputProcessor.h)
+#set(RENDERER_SRCS
+#        renderer/IRenderer.cpp
+#        renderer/IRenderer.h renderer/Sprite.cpp renderer/Sprite.h renderer/Director.cpp renderer/Director.h renderer/MultiBars.cpp renderer/MultiBars.h renderer/Cube.cpp renderer/Cube.h )
 
-add_executable(opengl_tutorial main.cpp gl_func_adapter.h
+aux_source_directory(renderer RENDERER_SRCS)
+
+add_executable(opengl_tutorial
+        main.cpp
+        gl_func_adapter.h
+        InputProcessor.cpp
+        InputProcessor.h
         ${SHADER_SRCS}
         ${RENDERER_SRCS})
 
