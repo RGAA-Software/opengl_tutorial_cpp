@@ -58,7 +58,7 @@ int main(int argc, char** argv)
     //auto shader = ShaderLoader::LoadShaderForPath("../resources/shaders/triangle/vs.glsl", "../resources/shaders/triangle/fs.glsl");
 
     Director::Instance()->Init(window_width, window_height);
-    Sprite sprite("../resources/shaders/triangle/vs.glsl", "../resources/shaders/triangle/fs_image_directional_light.glsl", "../resources/images/ground_stone.jpg");
+    Sprite sprite("../resources/shaders/triangle/vs.glsl", "../resources/shaders/triangle/fs_image_spot_light.glsl", "../resources/images/ground_stone.jpg");
     //Sprite circle_sprite("../resources/shaders/triangle/vs.glsl", "../resources/shaders/triangle/fs.glsl", SpriteShape::kCircle, Projection::kOrtho);
     //MultiBars multi_bars("../resources/shaders/triangle/vs.glsl", "../resources/shaders/triangle/fs_color.glsl");
 
@@ -105,25 +105,29 @@ int main(int argc, char** argv)
 
 //        sprite.SetRotate(glfwGetTime()*16, glm::vec3(0,1,0));
 
-        auto light_direction = glm::vec3(-1, -1, 0);
-        auto light_color = glm::vec3(1,1,1);
+        auto light_direction = glm::vec3(-0.5, -1, 0);
+        auto light_color = glm::vec3(0.7,0.7,0);
+        auto light_position = glm::vec3(2, 1, 0);
 
         auto sprite_shader = sprite.GetShader();
         sprite_shader->Use();
         sprite_shader->SetUniform3fv("lightColor", light_color);
         sprite_shader->SetUniform3fv("lightDirection", light_direction);
+        sprite_shader->SetUniform1f("lightCutoffAngel", glm::cos(glm::radians(15.0f)));
+        sprite_shader->SetUniform1f("lightOuterCutoffAngel", glm::cos(glm::radians(25.0f)));
+        sprite_shader->SetUniform3fv("lightPosition", light_position);
         sprite_shader->SetUniform3fv("cameraPosition", Director::Instance()->GetCameraPosition());
         sprite.SetRotate(-90, glm::vec3(1,0,0));
         sprite.SetScale(glm::vec3(1,1,1));
-        sprite.SetTranslate(glm::vec3(-.3,-2,0));
+        sprite.SetTranslate(glm::vec3(0,-2,0));
         sprite.Render(0);
 
-//        auto light_cube_shader = light_cube.GetShader();
-//        light_cube_shader->Use();
-//        light_cube_shader->SetUniform3fv("color", light_color);
-//        light_cube.SetTranslate(light_direction);
-//        light_cube.SetScale(glm::vec3(0.2));
-//        light_cube.Render(delta);
+        auto light_cube_shader = light_cube.GetShader();
+        light_cube_shader->Use();
+        light_cube_shader->SetUniform3fv("color", light_color);
+        light_cube.SetTranslate(light_position);
+        light_cube.SetScale(glm::vec3(0.1));
+        light_cube.Render(delta);
 
 //        sprite.SetRotate(0);
 //        sprite.SetScale(glm::vec3(1,1,1));
