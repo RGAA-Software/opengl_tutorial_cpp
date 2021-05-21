@@ -26,6 +26,8 @@ public:
     void SetRotate(float angel, const glm::vec3& axis = glm::vec3(0,0,1));
     void SetScale(const glm::vec3& scale);
 
+    ShaderPtr GetShader();
+
 protected:
 
     virtual void Render(float delta);

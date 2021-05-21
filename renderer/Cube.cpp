@@ -24,6 +24,9 @@ Cube::Cube(const std::string& vs_path, const std::string& fs_path, const std::st
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 2, GL_FLOAT, false, stride*sizeof(float), (void*)(6*sizeof(float)));
 
+    glEnableVertexAttribArray(3);
+    glVertexAttribPointer(3, 3, GL_FLOAT, false, stride*sizeof(float), (void*)(3*sizeof(float)));
+
     if (!tex_path.empty()) {
         glGenTextures(1, &texture);
         glBindTexture(GL_TEXTURE_2D, texture);

@@ -11,10 +11,15 @@ uniform mat4 model;
 
 out vec3 outColor;
 out vec2 outTex;
+out vec3 outNormal;
+out vec3 outPos;
 
 void main()
 {
-    gl_Position = projection * view * model * vec4(aPos, 1.0);
+    vec4 posInWorld = model * vec4(aPos, 1.0);
+    gl_Position = projection * view * posInWorld;
     outColor = aColor;
     outTex = aTex;
+    outNormal = mat3(model) * aNormal;
+    outPos = posInWorld.xyz;
 }

@@ -14,7 +14,7 @@
 
 namespace sk {
 
-Sprite::Sprite(const std::string& vs_path, const std::string& fs_path, SpriteShape shape, Projection proj)
+Sprite::Sprite(const std::string& vs_path, const std::string& fs_path, const std::string& image_path, SpriteShape shape, Projection proj)
     : IRenderer(vs_path, "", fs_path) {
 
     this->shape = shape;
@@ -27,23 +27,25 @@ Sprite::Sprite(const std::string& vs_path, const std::string& fs_path, SpriteSha
     size.x = image_width;
     size.y = image_height;
 
-    int vertices_size = 8*4;
+    int vertices_size = 11*4;
     float* vertices = new float[vertices_size];
+
+    float extend_size = 5;
 
     if (proj == Projection::kPerspective) {
         float verts[] = {
-                -0.5,  -0.5,  0,                        1.0, 0.0, 0.0,    0.0f, 0.0f,
-                0.5, -0.5,  0,                          0.0, 1.0, 0.0,    1.0f, 0.0f,
-                0.5, 0.5, 0,                            0.0, 0.0, 1.0,    1.0f, 1.0f,
-                -0.5,  0.5, 0,                          0.9, 0.6, 0.8,    0.0f, 1.0f
+                -0.5f * extend_size,  -0.5f * extend_size,  0,    1.0, 0.0, 0.0,    0.0f, 0.0f,  0, 0, 1,
+                0.5f * extend_size, -0.5f * extend_size,  0,      0.0, 1.0, 0.0,    1.0f * extend_size, 0.0f,  0, 0, 1,
+                0.5f * extend_size, 0.5f * extend_size, 0,        0.0, 0.0, 1.0,    1.0f * extend_size, 1.0f * extend_size,  0, 0, 1,
+                -0.5f * extend_size,  0.5f * extend_size, 0,      0.9, 0.6, 0.8,    0.0f * extend_size, 1.0f * extend_size,  0, 0, 1,
         };
         memcpy(vertices, verts, sizeof(float)*vertices_size);
     } else if (proj == Projection::kOrtho) {
         float verts[] = {
-                0,  0,  0,                      1.0, 0.0, 0.0,    0.0f, 0.0f,
-                image_width, 0,  0,             0.0, 1.0, 0.0,    1.0f, 0.0f,
-                image_width, image_height, 0,   0.0, 0.0, 1.0,    1.0f, 1.0f,
-                0,  image_height, 0,            0.9, 0.6, 0.8,    0.0f, 1.0f
+                0,  0,  0,                      1.0, 0.0, 0.0,    0.0f, 0.0f,  0, 0, 1,
+                image_width, 0,  0,             0.0, 1.0, 0.0,    1.0f, 0.0f,  0, 0, 1,
+                image_width, image_height, 0,   0.0, 0.0, 1.0,    1.0f, 1.0f,  0, 0, 1,
+                0,  image_height, 0,            0.9, 0.6, 0.8,    0.0f, 1.0f,  0, 0, 1,
         };
         memcpy(vertices, verts, sizeof(float)*vertices_size);
     }
@@ -65,6 +67,10 @@ Sprite::Sprite(const std::string& vs_path, const std::string& fs_path, SpriteSha
 
         circle_vertices.push_back(u);
         circle_vertices.push_back(v);
+
+        circle_vertices.push_back(0);
+        circle_vertices.push_back(0);
+        circle_vertices.push_back(1);
     };
 
     // add circle center
@@ -90,7 +96,7 @@ Sprite::Sprite(const std::string& vs_path, const std::string& fs_path, SpriteSha
         glBufferData(GL_ARRAY_BUFFER, sizeof(float)*circle_vertices.size(), circle_vertices.data(), GL_STATIC_DRAW);
     }
 
-    int stride = sizeof(float) * 8;
+    int stride = sizeof(float) * 11;
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, false, stride, (void*)0);
 
@@ -99,6 +105,9 @@ Sprite::Sprite(const std::string& vs_path, const std::string& fs_path, SpriteSha
 
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 2, GL_FLOAT, false, stride, (void*)(6*sizeof(float)));
+
+    glEnableVertexAttribArray(3);
+    glVertexAttribPointer(3, 3, GL_FLOAT, false, stride, (void*)(8*sizeof(float)));
 
     glGenBuffers(1, &EBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
@@ -117,7 +126,7 @@ Sprite::Sprite(const std::string& vs_path, const std::string& fs_path, SpriteSha
     // Load Image
     int width, height, channels;
     stbi_set_flip_vertically_on_load(true);
-    unsigned char* data = stbi_load("../resources/images/person.jpg", &width, &height, &channels, 0 );
+    unsigned char* data = stbi_load(image_path.c_str(), &width, &height, &channels, 0 );
     if (data) {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);

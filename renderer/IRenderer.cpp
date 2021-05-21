@@ -34,6 +34,10 @@ void IRenderer::SetScale(const glm::vec3& scale) {
     this->scale = scale;
 }
 
+ShaderPtr IRenderer::GetShader() {
+    return shader;
+}
+
 void IRenderer::Render(float delta) {
     glBindVertexArray(vao);
     shader->Use();

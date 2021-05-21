@@ -48,7 +48,7 @@ void InputProcessor::ProcessEvent(GLFWwindow *window, float delta) {
 }
 
 void InputProcessor::ProcessCursor(double x, double y) {
-    std::cout << "x : " << x << " y : " << y << std::endl;
+    //std::cout << "x : " << x << " y : " << y << std::endl;
     if (first_enter) {
         first_enter = false;
         last_x = x;
