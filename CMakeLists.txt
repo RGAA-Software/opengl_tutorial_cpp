@@ -12,6 +12,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 find_package(glfw3 REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(glm REQUIRED)
+find_package(assimp REQUIRED)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -21,11 +22,21 @@ set(SHADER_SRCS
         shader/ShaderProgram.h
         )
 
-#set(RENDERER_SRCS
-#        renderer/IRenderer.cpp
-#        renderer/IRenderer.h renderer/Sprite.cpp renderer/Sprite.h renderer/Director.cpp renderer/Director.h renderer/MultiBars.cpp renderer/MultiBars.h renderer/Cube.cpp renderer/Cube.h )
+set(RENDERER_INCS
+        renderer/IRenderer.h
+        renderer/Sprite.h
+        renderer/Director.h
+        renderer/MultiBars.h
+        renderer/Cube.h
+        renderer/model/Vertex.h
+        renderer/model/Model.h
+        renderer/model/Mesh.h
+        renderer/model/Texture.h
+        renderer/model/TextureLoader.h
+        )
 
 aux_source_directory(renderer RENDERER_SRCS)
+aux_source_directory(renderer/model RENDERER_MODEL_SRCS)
 
 add_executable(opengl_tutorial
         main.cpp
@@ -33,8 +44,11 @@ add_executable(opengl_tutorial
         InputProcessor.cpp
         InputProcessor.h
         ${SHADER_SRCS}
-        ${RENDERER_SRCS})
+        ${RENDERER_SRCS}
+        ${RENDERER_INCS}
+        ${RENDERER_MODEL_SRCS})
 
 target_link_libraries(opengl_tutorial PRIVATE glfw)
 target_link_libraries(opengl_tutorial PRIVATE GLEW::GLEW)
 target_link_libraries(opengl_tutorial PRIVATE glm::glm)
+target_link_libraries(opengl_tutorial PRIVATE assimp::assimp)

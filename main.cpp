@@ -9,6 +9,7 @@
 #include "renderer/Director.h"
 #include "renderer/MultiBars.h"
 #include "renderer/Cube.h"
+#include "renderer/model/Model.h"
 
 #include "InputProcessor.h"
 
@@ -65,6 +66,17 @@ int main(int argc, char** argv)
     Cube cube("../resources/shaders/triangle/vs.glsl", "../resources/shaders/triangle/fs_image_directional_light.glsl","../resources/images/person.jpg");
     Cube light_cube("../resources/shaders/triangle/vs.glsl", "../resources/shaders/triangle/fs_uniform_color.glsl");
 
+    //Model model("../resources/models/earth/earth.obj", "../resources/shaders/triangle/vs.glsl", "../resources/shaders/triangle/fs_model.glsl");
+    Model model("../resources/models/nanosuit/nanosuit.obj",
+                "../resources/shaders/triangle/vs.glsl",
+                "../resources/shaders/triangle/fs_model.glsl");
+    Model model_earth("../resources/models/earth/earth.obj",
+                "../resources/shaders/triangle/vs.glsl",
+                "../resources/shaders/triangle/fs_model.glsl");
+    Model model_statue("../resources/models/statue/12328_Statue_v1_L2.obj",
+                "../resources/shaders/triangle/vs.glsl",
+                "../resources/shaders/triangle/fs_model.glsl");
+
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     int nrAttributes;
@@ -75,8 +87,8 @@ int main(int argc, char** argv)
 //    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glm::vec3 cube_positions[] = {
-            glm::vec3(0, 0, -5),
-            glm::vec3(1.0f, 0.6f, 0),
+            glm::vec3(0, 3, -5),
+            glm::vec3(2.0f, 0.6f, 0),
             glm::vec3(-2.0f, 1.0f, -3.0f),
             glm::vec3(3.0f, -0.8f, 1.0f),
             glm::vec3(-3.0f, -1.8f, -4.0f),
@@ -95,6 +107,7 @@ int main(int argc, char** argv)
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
         glClearColor(0.1, 0.1, 0.1, 1.0);
+        glEnable(GL_DEPTH_TEST);
 
         auto current_time = glfwGetTime();
         if (last_render_time == 0) {
@@ -106,7 +119,7 @@ int main(int argc, char** argv)
 //        sprite.SetRotate(glfwGetTime()*16, glm::vec3(0,1,0));
 
         auto light_direction = glm::vec3(-0.5, -1, 0);
-        auto light_color = glm::vec3(0.7,0.7,0);
+        auto light_color = glm::vec3(1.0,1.0,1.0);
         auto light_position = glm::vec3(2, 1, 0);
 
         auto sprite_shader = sprite.GetShader();
@@ -129,6 +142,37 @@ int main(int argc, char** argv)
         light_cube.SetScale(glm::vec3(0.1));
         light_cube.Render(delta);
 
+        float earth_scale = 0.0025;
+        auto model_earth_shader = model_earth.GetShader();
+        model_earth_shader->Use();
+        model_earth_shader->SetUniform3fv("lightColor", light_color);
+        model_earth_shader->SetUniform3fv("lightDirection", light_direction);
+        model_earth.SetRotate(glfwGetTime()*16, glm::vec3(0,1,0));
+        model_earth.SetScale(glm::vec3(earth_scale, earth_scale, earth_scale));
+        model_earth.SetTranslate(glm::vec3(3, 1, -1));
+        model_earth.Render(delta);
+
+        float scale = 0.20;
+        auto model_shader = model.GetShader();
+        model_shader->Use();
+        model_shader->SetUniform3fv("lightColor", light_color);
+        model_shader->SetUniform3fv("lightDirection", light_direction);
+        model.SetRotate(glfwGetTime()*16, glm::vec3(0,1,0));
+        model.SetScale(glm::vec3(scale, scale, scale));
+        model.SetTranslate(glm::vec3(0, -1, 0));
+        model.Render(delta);
+
+        float statue_scale = 0.015;
+        auto model_statue_shader = model_statue.GetShader();
+        model_statue_shader->Use();
+        model_statue_shader->SetUniform3fv("lightColor", light_color);
+        model_statue_shader->SetUniform3fv("lightDirection", light_direction);
+        model_statue.SetTranslate(glm::vec3(-3, -2, 0));
+        model_statue.SetScale(glm::vec3(statue_scale,statue_scale,statue_scale));
+        model_statue.SetRotate(-90, glm::vec3(1,0,0));
+        model_statue.Render(delta);
+
+
 //        sprite.SetRotate(0);
 //        sprite.SetScale(glm::vec3(1,1,1));
 //        sprite.SetTranslate(glm::vec3(200, 200, 0));
@@ -145,7 +189,7 @@ int main(int argc, char** argv)
 
         InputProcessor::Instance()->ProcessEvent(window, delta);
 
-        glEnable(GL_DEPTH_TEST);
+
         auto cube_shader = cube.GetShader();
         cube_shader->Use();
         cube_shader->SetUniform3fv("lightColor", light_color);
