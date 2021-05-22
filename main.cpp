@@ -62,7 +62,7 @@ int main(int argc, char** argv)
     //Sprite circle_sprite("../resources/shaders/triangle/vs.glsl", "../resources/shaders/triangle/fs.glsl", SpriteShape::kCircle, Projection::kOrtho);
     //MultiBars multi_bars("../resources/shaders/triangle/vs.glsl", "../resources/shaders/triangle/fs_color.glsl");
 
-    Cube cube("../resources/shaders/triangle/vs.glsl", "../resources/shaders/triangle/fs_image_point_light.glsl","../resources/images/person.jpg");
+    Cube cube("../resources/shaders/triangle/vs.glsl", "../resources/shaders/triangle/fs_single_image.glsl","../resources/images/person.jpg");
     Cube light_cube("../resources/shaders/triangle/vs.glsl", "../resources/shaders/triangle/fs_uniform_color.glsl");
 
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -116,14 +116,14 @@ int main(int argc, char** argv)
         sprite.SetRotate(-90, glm::vec3(1,0,0));
         sprite.SetScale(glm::vec3(1,1,1));
         sprite.SetTranslate(glm::vec3(-.3,-2,0));
-        sprite.Render(0);
+        //sprite.Render(0);
 
         auto light_cube_shader = light_cube.GetShader();
         light_cube_shader->Use();
         light_cube_shader->SetUniform3fv("color", light_color);
         light_cube.SetTranslate(light_position);
         light_cube.SetScale(glm::vec3(0.2));
-        light_cube.Render(delta);
+        //light_cube.Render(delta);
 
 //        sprite.SetRotate(0);
 //        sprite.SetScale(glm::vec3(1,1,1));
@@ -152,7 +152,7 @@ int main(int argc, char** argv)
         for (auto& pos : cube_positions) {
             index += 3;
             cube.SetTranslate(pos);
-            cube.SetRotate(glfwGetTime()*index * (index%2 == 0 ? 1 : -1), glm::vec3(1,1,0));
+            //cube.SetRotate(glfwGetTime()*index * (index%2 == 0 ? 1 : -1), glm::vec3(1,1,0));
             cube.Render(delta);
         }
 
