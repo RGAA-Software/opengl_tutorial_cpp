@@ -155,6 +155,32 @@ int main(int argc, char** argv)
         glClear(GL_COLOR_BUFFER_BIT);
         glClearColor(0.2, 0.5, 0.5, 1.0);
 
+        glm::mat4 model(1.0);
+        model = glm::translate(model, glm::vec3(50, 50, 0));
+        //model = glm::rotate(model, rotate, glm::vec3(0, 0, 1));
+
+//        glBindVertexArray(VAO);
+//        shader->Use();
+//        shader->SetUniformMatrix("projection", projection);
+//        shader->SetUniformMatrix("model", model);
+//        //glDrawArrays(GL_TRIANGLES, 0, 6);
+//
+//        float red_value = (float)glm::sin(glfwGetTime());
+//        glm::vec3 color(red_value, red_value/2, red_value/2);
+//        shader->SetUniform3fv("color", color);
+//
+//        glActiveTexture(GL_TEXTURE0);
+//        glBindTexture(GL_TEXTURE_2D, texture);
+//        shader->SetUniform1i("image", 0);
+//
+//        glActiveTexture(GL_TEXTURE1);
+//        glBindTexture(GL_TEXTURE_2D, texture_logo);
+//        shader->SetUniform1i("image2", 1);
+//
+//        shader->SetUniform1f("mix_factor", 0.5f);
+//
+//        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
         float translate_step = 200;
         for (int i = 0; i < 4; i++) {
             auto rotate = (float)glm::radians(glfwGetTime()) * 10;
