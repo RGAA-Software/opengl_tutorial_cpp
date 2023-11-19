@@ -26,27 +26,29 @@
 ![](docs/8.scale.png)
 
 #### 绘制圆形图片
-![](docs/9.circle.png)
+![](docs/9.circle.gif)
 
 #### 绘制渐变图形
 ![](docs/10.bars.png)
 
 #### 进入3D
-![](docs/11.3d-2d.png)
+![](docs/11.3d.gif)
+![](docs/11.3d.2.gif)
 
 #### 键盘鼠标操作
-![](docs/12.boxes.png)
+![](docs/11.3d.3.gif)
 
 #### 平行光
 ![](docs/13.directional_light.png)
+![](docs/9.1direction_light.gif)
 
 #### 点光
 ![](docs/17.point_attenuation.png)
+![](docs/12.light.gif)
 
 #### 手电筒
 ![](docs/14.spot_light.png)
+![](docs/9.1spot_light.gif)
 
 #### 加载模型
 ![](docs/16.model.png)
-
-#### 待续...
