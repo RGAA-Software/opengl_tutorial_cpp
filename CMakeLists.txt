@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 
-SET(CMAKE_TOOLCHAIN_FILE C:/source/vcpkg/scripts/buildsystems/vcpkg.cmake CACHE STRING "")
+#SET(CMAKE_TOOLCHAIN_FILE D:/vcpkg/scripts/buildsystems/vcpkg.cmake CACHE STRING "")
+include(env.cmake)
 
 project(opengl_tutorial)
 
